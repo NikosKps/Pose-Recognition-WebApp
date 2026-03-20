@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Tracking | Pose AI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar animate-in">
+        <div class="nav-container">
+            <div class="nav-brand-box"><span class="brand-text">Pose Recognition</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item">Home</a></li>
+                <li><a href="about.html" class="nav-item">About</a></li>
+            </ul>
+            <a href="index.html" class="nav-cta-btn">
+                <svg class="icon-control" viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m5-2h.01M17 12h.01M17 10h.01M17 14h.01M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>App Demo</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="app-content animate-in">
+        <h2 style="font-size: 2.5rem; letter-spacing: -1.5px; margin-bottom: 30px; font-weight: 800; align-self: center; color: var(--text-primary);">Live Tracking</h2>
+
+        <div class="btn-group">
+            <button type="button" class="btn-main" id="start-btn" onclick="startCamera()">Start Camera</button>
+            <button type="button" class="btn-secondary" id="stop-btn" onclick="stopCamera()">Stop</button>
+        </div>
+
+        <div id="canvas-container"><canvas id="canvas"></canvas></div>
+
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <div id="label-container" class="status-neutral">Ready...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+    <script>
+        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/n6DATMK2O/";
+        let model, webcam, ctx, labelContainer, rafId, isRunning = false;
+
+        async function startCamera() {
+            const startBtn = document.getElementById("start-btn");
+            const stopBtn  = document.getElementById("stop-btn");
+            labelContainer = document.getElementById("label-container");
+
+            startBtn.disabled = true;
+            startBtn.textContent = "Loading...";
+            labelContainer.innerHTML = "Loading model...";
+            labelContainer.className = "status-loading";
+
+            try {
+                model = await tmPose.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+
+                const size = Math.min(window.innerWidth - 40, 450);
+                webcam = new tmPose.Webcam(size, size, true);
+                await webcam.setup();
+                await webcam.play();
+
+                const canvas = document.getElementById("canvas");
+                canvas.width = size;
+                canvas.height = size;
+                ctx = canvas.getContext("2d");
+
+                isRunning = true;
+                startBtn.style.display = "none";
+                stopBtn.style.display = "inline-flex";
+
+                labelContainer.innerHTML = "Detecting...";
+                labelContainer.className = "status-neutral";
+
+                rafId = window.requestAnimationFrame(loop);
+
+            } catch (err) {
+                const msg = err.name === "NotAllowedError"
+                    ? "⚠️ Camera access denied"
+                    : "⚠️ Could not start camera";
+                labelContainer.innerHTML = msg;
+                labelContainer.className = "status-neutral";
+                startBtn.disabled = false;
+                startBtn.textContent = "Start Camera";
+            }
+        }
+
+        function stopCamera() {
+            isRunning = false;
+            cancelAnimationFrame(rafId);
+            if (webcam) { webcam.stop(); }
+
+            const canvas = document.getElementById("canvas");
+            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            document.getElementById("stop-btn").style.display = "none";
+            const startBtn = document.getElementById("start-btn");
+            startBtn.style.display = "inline-flex";
+            startBtn.disabled = false;
+            startBtn.textContent = "Start Camera";
+
+            document.getElementById("label-container").innerHTML = "Stopped.";
+            document.getElementById("label-container").className = "status-neutral";
+        }
+
+        async function loop() {
+            if (!isRunning) return;
+            webcam.update();
+            await predict();
+            rafId = window.requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
+            const prediction = await model.predict(posenetOutput);
+
+            let high = 0, match = "";
+            prediction.forEach(p => { if (p.probability > high) { high = p.probability; match = p.className; } });
+
+            const humanDetected = pose && pose.score > 0.45;
+            labelContainer.innerHTML = humanDetected ? match.toUpperCase() : "⚠️ NO HUMAN";
+            labelContainer.className = humanDetected ? "status-main" : "status-neutral";
+
+            ctx.drawImage(webcam.canvas, 0, 0);
+            if (pose) {
+                const minConf = 0.5;
+                tmPose.drawKeypoints(pose.keypoints, minConf, ctx);
+                tmPose.drawSkeleton(pose.keypoints, minConf, ctx);
+            }
+        }
+    </script>
+</body>
+</html>

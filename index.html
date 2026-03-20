@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose AI | Menu</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar animate-in">
+        <div class="nav-container">
+            <div class="nav-brand-box"><span class="brand-text">Pose Recognition</span></div>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item">Home</a></li>
+                <li><a href="about.html" class="nav-item">About</a></li>
+            </ul>
+            <span class="nav-cta-btn nav-cta-current">
+                <svg class="icon-control" viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m5-2h.01M17 12h.01M17 10h.01M17 14h.01M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>App Demo</span>
+            </span>
+        </div>
+    </nav>
+    <div class="animate-in" style="text-align: center;">
+        <h2 style="font-size: 3.5rem; letter-spacing: -3px; font-weight: 800; color: var(--text-primary);">Choose Mode</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px;">Select your tracking experience.</p>
+    </div>
+    <div class="menu-grid animate-in" style="animation-delay: 0.2s;">
+        <a href="live.html" class="menu-card">
+            <h3>Live Tracking</h3>
+            <p>Real-time pose recognition.</p>
+        </a>
+        <a href="score.html" class="menu-card">
+            <h3>15s Posture Test</h3>
+            <p>Get your accuracy score.</p>
+        </a>
+    </div>
+</body>
+</html>
