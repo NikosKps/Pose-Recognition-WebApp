@@ -11,7 +11,7 @@
 <body>
     <nav class="navbar animate-in">
         <div class="nav-container">
-            <div class="nav-brand-box"><span class="brand-text">Pose Recognition</span></div>
+            <a href="home.html" class="nav-brand-box" style="text-decoration:none;display:flex;align-items:center;gap:8px;"><svg style="width:18px;height:18px;fill:none;stroke:var(--brand-color);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg><span class="brand-text">Pose AI</span></a>
             <ul class="nav-links">
                 <li><a href="home.html" class="nav-item">Home</a></li>
                 <li><a href="about.html" class="nav-item">About</a></li>
@@ -20,8 +20,21 @@
                 <svg class="icon-control" viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m5-2h.01M17 12h.01M17 10h.01M17 14h.01M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <span>App Demo</span>
             </a>
+            <button class="hamburger-btn" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="home.html">Home</a>
+        <a href="about.html">About</a>
+        <div class="mobile-divider"></div>
+        <a href="index.html" class="mobile-cta">
+            <svg style="width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5" viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m5-2h.01M17 12h.01M17 10h.01M17 14h.01M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            App Demo
+        </a>
+    </div>
 
     <div class="app-content animate-in">
         <h2 style="font-size: 2.5rem; letter-spacing: -1.5px; margin-bottom: 30px; font-weight: 800; align-self: center; color: var(--text-primary);">Live Tracking</h2>
@@ -130,6 +143,22 @@
                 tmPose.drawSkeleton(pose.keypoints, minConf, ctx);
             }
         }
+    </script>
+    <script>
+        function toggleMenu() {
+            const btn = document.getElementById('hamburger');
+            const menu = document.getElementById('mobile-menu');
+            btn.classList.toggle('open');
+            menu.classList.toggle('open');
+        }
+        document.addEventListener('click', function(e) {
+            const btn = document.getElementById('hamburger');
+            const menu = document.getElementById('mobile-menu');
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                btn.classList.remove('open');
+                menu.classList.remove('open');
+            }
+        });
     </script>
 </body>
 </html>
