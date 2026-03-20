@@ -42,6 +42,9 @@
         <div class="btn-group">
             <button type="button" class="btn-main" id="test-btn" onclick="startTest()">Start 15s Test</button>
             <button type="button" class="btn-secondary" id="retry-btn" onclick="resetTest()">Try Again</button>
+            <button type="button" class="btn-secondary" id="flip-btn" onclick="flipCamera()" style="display:none; padding: 18px 20px;">
+                <svg style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            </button>
         </div>
 
         <div id="canvas-container"><canvas id="canvas"></canvas></div>
@@ -59,9 +62,8 @@
         const MODEL_URL = "https://teachablemachine.withgoogle.com/models/n6DATMK2O/";
         let model, webcam, ctx, labelContainer;
         let scores = [], isTesting = false, rafId;
+        let facingMode = "user";
 
-        // Debounce: μια pose πρέπει να εντοπιστεί για CONFIRM_FRAMES
-        // συνεχόμενα frames πριν καταγραφεί ως κίνηση
         const CONFIRM_FRAMES = 12;
         let candidatePose = null;
         let candidateFrames = 0;
@@ -70,6 +72,7 @@
 
         async function startTest() {
             const testBtn = document.getElementById("test-btn");
+            const flipBtn = document.getElementById("flip-btn");
             labelContainer = document.getElementById("label-container");
 
             testBtn.disabled = true;
@@ -78,11 +81,11 @@
             labelContainer.className = "status-loading";
 
             try {
-                model = await tmPose.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+                if (!model) model = await tmPose.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
 
                 const size = Math.min(window.innerWidth - 40, 450);
-                webcam = new tmPose.Webcam(size, size, true);
-                await webcam.setup();
+                webcam = new tmPose.Webcam(size, size, facingMode === "user");
+                await webcam.setup({ facingMode });
                 await webcam.play();
 
                 const canvas = document.getElementById("canvas");
@@ -91,6 +94,7 @@
                 ctx = canvas.getContext("2d");
 
                 testBtn.style.display = "none";
+                flipBtn.style.display = "inline-flex";
                 scores = [];
                 movementSequence = [];
                 candidatePose = null;
@@ -124,8 +128,19 @@
                 labelContainer.innerHTML = msg;
                 labelContainer.className = "status-neutral";
                 testBtn.disabled = false;
-                testBtn.textContent = "Start 10s Test";
+                testBtn.textContent = "Start 15s Test";
             }
+        }
+
+        async function flipCamera() {
+            facingMode = facingMode === "user" ? "environment" : "user";
+            isTesting = false;
+            cancelAnimationFrame(rafId);
+            if (webcam) { webcam.stop(); }
+            scores = [];
+            movementSequence = [];
+            document.getElementById("test-btn").style.display = "none";
+            await startTest();
         }
 
         async function loop() {
@@ -220,6 +235,7 @@
             canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 
             document.getElementById("retry-btn").style.display = "none";
+            document.getElementById("flip-btn").style.display = "none";
             document.getElementById("movement-log").style.display = "none";
 
             const testBtn = document.getElementById("test-btn");
