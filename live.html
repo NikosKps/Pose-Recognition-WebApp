@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose AI / Live Tracking</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function(){ try { var t = localStorage.getItem('pose-ai-theme') || 'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand-box">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg>
+                <span class="brand-text">Pose<span class="slash">/</span>AI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item">Home</a></li>
+                <li><a href="about.html" class="nav-item">About</a></li>
+            </ul>
+            <a href="menu.html" class="nav-cta-btn"><span class="dot-live"></span><span>Demo</span></a>
+            <button class="hamburger-btn" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="home.html">Home</a>
+        <a href="about.html">About</a>
+        <div class="mobile-divider"></div>
+        <a href="menu.html" class="mobile-cta">Demo</a>
+    </div>
+
+    <div class="page-frame">
+        <div class="page-meta">
+            <span><span class="dot"></span>Mode 01 / Live Tracking</span>
+            <span id="page-meta-status">Idle</span>
+        </div>
+
+        <div class="app-shell">
+            <div class="animate-in">
+                <div class="app-stage">
+                    <div class="stage-header" id="stage-header">
+                        <div class="left">
+                            <span class="rec-dot"></span>
+                            <span id="stage-status">Camera offline</span>
+                        </div>
+                        <div><span id="stage-fps">— FPS</span></div>
+                    </div>
+                    <div class="stage-canvas" id="canvas-container">
+                        <div class="corner-grid"></div>
+                        <div class="crosshair tl"></div><div class="crosshair tr"></div>
+                        <div class="crosshair bl"></div><div class="crosshair br"></div>
+                        <div class="corner tl">CAM 01<br>1:1</div>
+                        <div class="corner tr">REC<br><span id="elapsed">00:00:00</span></div>
+                        <div class="corner bl"><span id="kp-count">0</span> KEYPOINTS</div>
+                        <div class="corner br">CONF <span id="conf-readout">0.00</span></div>
+                        <div class="placeholder" id="placeholder">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                            <span>Camera awaiting permission</span>
+                        </div>
+                        <canvas id="canvas"></canvas>
+                    </div>
+                    <div class="stage-footer">
+                        <div class="label-pose dim" id="label-wrap">
+                            <span class="status-pill" id="label-pill">Ready</span>
+                            <span class="pose-name" id="pose-name">—</span>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn-main" id="start-btn" onclick="startCamera()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Start camera
+                            </button>
+                            <button type="button" class="btn-secondary" id="stop-btn" onclick="stopCamera()">Stop</button>
+                            <button type="button" class="btn-secondary btn-icon" id="flip-btn" onclick="flipCamera()" aria-label="Flip camera">
+                                <svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="side-panel animate-in" style="animation-delay:0.1s;">
+                <div class="panel">
+                    <div class="panel-head">
+                        <span class="title">Confidence / 7 classes</span>
+                        <span class="meta" id="top-class-meta">—</span>
+                    </div>
+                    <div class="panel-body" id="bars-body">
+                        <!-- bars injected by JS -->
+                    </div>
+                </div>
+
+                <div class="instrument-row">
+                    <div class="instrument">
+                        <div class="label">Pose score</div>
+                        <div class="value" id="pose-score">—</div>
+                    </div>
+                    <div class="instrument">
+                        <div class="label">Frames</div>
+                        <div class="value" id="frame-count">0</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <span class="title">Recent</span>
+                        <span class="meta">last 5</span>
+                    </div>
+                    <div class="panel-body" id="recent-list">
+                        <div class="empty-note">No detections yet</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="page-footer">
+            <span>© 2026 / Pose AI</span>
+            <span>Local inference / no upload</span>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+    <script>
+        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/n6DATMK2O/";
+        const CLASSES = ["Desk Posture","Standing Posture","Right Hand Raised","Left Hand Raised","Left Leg Raised","Right Leg Raised","Hands Up"];
+
+        let model, webcam, ctx, rafId, isRunning = false, facingMode = "user";
+        let startTime = 0, frameCount = 0, lastFpsTime = 0, fpsFrames = 0;
+        let recent = [];
+
+        // build confidence bar rows (placeholder; real labels populated after model loads)
+        function buildBars(labels){
+            const body = document.getElementById('bars-body');
+            body.innerHTML = '';
+            labels.forEach((name, i) => {
+                const row = document.createElement('div');
+                row.className = 'bar-row';
+                row.dataset.cls = name;
+                row.innerHTML = `
+                    <div class="bar-label"><span class="idx">${String(i+1).padStart(2,'0')}</span>${name}</div>
+                    <div class="bar-value">0%</div>
+                    <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+                `;
+                body.appendChild(row);
+            });
+        }
+        buildBars(CLASSES);
+
+        function fmtTime(ms){
+            const s = Math.floor(ms/1000);
+            const hh = String(Math.floor(s/3600)).padStart(2,'0');
+            const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+            const ss = String(s%60).padStart(2,'0');
+            return `${hh}:${mm}:${ss}`;
+        }
+
+        function setStatus(text, klass){
+            document.getElementById('stage-status').textContent = text;
+            document.getElementById('page-meta-status').textContent = text;
+            const pill = document.getElementById('label-pill');
+            pill.className = 'status-pill';
+            if (klass) pill.classList.add(klass);
+            pill.textContent = text;
+        }
+
+        async function startCamera() {
+            const startBtn = document.getElementById("start-btn");
+            const stopBtn = document.getElementById("stop-btn");
+            const flipBtn = document.getElementById("flip-btn");
+            const placeholder = document.getElementById('placeholder');
+
+            startBtn.disabled = true;
+            startBtn.innerHTML = 'Loading…';
+            setStatus('Loading model', 'is-loading');
+
+            try {
+                if (!model) model = await tmPose.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+                const labels = (model.getClassLabels && model.getClassLabels()) || CLASSES;
+                buildBars(labels);
+
+                const container = document.getElementById('canvas-container');
+                const size = Math.min(container.clientWidth, 600);
+                webcam = new tmPose.Webcam(size, size, facingMode === "user");
+                await webcam.setup({ facingMode });
+                await webcam.play();
+
+                const canvas = document.getElementById("canvas");
+                canvas.width = size; canvas.height = size;
+                ctx = canvas.getContext("2d");
+
+                isRunning = true;
+                startBtn.style.display = "none";
+                stopBtn.style.display = "inline-flex";
+                flipBtn.style.display = "inline-flex";
+                placeholder.style.display = 'none';
+                document.getElementById('stage-header').classList.add('is-live');
+                document.getElementById('label-wrap').classList.remove('dim');
+                setStatus('Detecting', 'is-main');
+
+                startTime = performance.now();
+                lastFpsTime = startTime;
+                fpsFrames = 0;
+                frameCount = 0;
+
+                rafId = requestAnimationFrame(loop);
+            } catch (err) {
+                const msg = err.name === "NotAllowedError" ? "Camera denied" : "Camera error";
+                setStatus(msg, '');
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start camera';
+            }
+        }
+
+        async function flipCamera() {
+            facingMode = facingMode === "user" ? "environment" : "user";
+            isRunning = false; cancelAnimationFrame(rafId);
+            if (webcam) webcam.stop();
+            await startCamera();
+        }
+
+        function stopCamera() {
+            isRunning = false; cancelAnimationFrame(rafId);
+            if (webcam) webcam.stop();
+            const canvas = document.getElementById("canvas");
+            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            document.getElementById("stop-btn").style.display = "none";
+            document.getElementById("flip-btn").style.display = "none";
+            const startBtn = document.getElementById("start-btn");
+            startBtn.style.display = "inline-flex";
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start camera';
+
+            document.getElementById('placeholder').style.display = 'flex';
+            document.getElementById('stage-header').classList.remove('is-live');
+            document.getElementById('label-wrap').classList.add('dim');
+            setStatus('Stopped', '');
+            document.getElementById('pose-name').textContent = '—';
+        }
+
+        async function loop() {
+            if (!isRunning) return;
+            webcam.update();
+            await predict();
+            // fps
+            frameCount++; fpsFrames++;
+            const now = performance.now();
+            if (now - lastFpsTime > 500) {
+                const fps = Math.round((fpsFrames * 1000) / (now - lastFpsTime));
+                document.getElementById('stage-fps').textContent = fps + ' FPS';
+                lastFpsTime = now; fpsFrames = 0;
+            }
+            document.getElementById('elapsed').textContent = fmtTime(now - startTime);
+            document.getElementById('frame-count').textContent = frameCount;
+            rafId = requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
+            const prediction = await model.predict(posenetOutput);
+
+            // update bars
+            let topName = '', topProb = 0;
+            const rows = document.querySelectorAll('.bar-row');
+            prediction.forEach(p => {
+                const row = [...rows].find(r => r.dataset.cls === p.className);
+                if (row) {
+                    row.querySelector('.bar-fill').style.width = (p.probability * 100) + '%';
+                    row.querySelector('.bar-value').textContent = (p.probability * 100).toFixed(0) + '%';
+                }
+                if (p.probability > topProb){ topProb = p.probability; topName = p.className; }
+            });
+            rows.forEach(r => r.classList.toggle('is-top', r.dataset.cls === topName));
+
+            const humanDetected = pose && pose.score > 0.45;
+
+            document.getElementById('pose-name').textContent = humanDetected ? topName : 'No human';
+            document.getElementById('pose-score').textContent = pose ? pose.score.toFixed(2) : '—';
+            document.getElementById('conf-readout').textContent = topProb.toFixed(2);
+            document.getElementById('top-class-meta').textContent = humanDetected ? (topProb*100).toFixed(0) + '%' : '—';
+            document.getElementById('kp-count').textContent = pose ? (pose.keypoints || []).filter(k => k.score > 0.5).length : 0;
+
+            if (humanDetected) {
+                if (recent[0] !== topName) {
+                    recent.unshift(topName);
+                    if (recent.length > 5) recent.pop();
+                    renderRecent();
+                }
+                setStatus('Detecting', 'is-main');
+            } else {
+                setStatus('No human', '');
+            }
+
+            ctx.drawImage(webcam.canvas, 0, 0);
+            if (pose) {
+                tmPose.drawKeypoints(pose.keypoints, 0.5, ctx);
+                tmPose.drawSkeleton(pose.keypoints, 0.5, ctx);
+            }
+        }
+
+        function renderRecent(){
+            const list = document.getElementById('recent-list');
+            if (!recent.length) { list.innerHTML = '<div class="empty-note">No detections yet</div>'; return; }
+            list.innerHTML = recent.map((name,i)=>`
+                <div class="seq-row">
+                    <span class="seq-num">${String(i+1).padStart(2,'0')}</span>
+                    <span class="seq-name">${name}</span>
+                    <span class="seq-time">${i===0?'now':i+'·'}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleMenu(){ document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobile-menu').classList.toggle('open'); }
+        document.addEventListener('click', function(e){
+            const btn=document.getElementById('hamburger'); const menu=document.getElementById('mobile-menu');
+            if(!btn.contains(e.target)&&!menu.contains(e.target)){ btn.classList.remove('open'); menu.classList.remove('open'); }
+        });
+    </script>
+</body>
+</html>

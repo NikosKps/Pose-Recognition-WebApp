@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose AI / Home</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function(){
+            try {
+                var t = localStorage.getItem('pose-ai-theme') || 'light';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch(e){}
+        })();
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand-box">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg>
+                <span class="brand-text">Pose<span class="slash">/</span>AI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item active">Home</a></li>
+                <li><a href="about.html" class="nav-item">About</a></li>
+            </ul>
+            <a href="menu.html" class="nav-cta-btn"><span class="dot-live"></span><span>Launch Demo</span></a>
+            <button class="hamburger-btn" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="home.html" class="active">Home</a>
+        <a href="about.html">About</a>
+        <div class="mobile-divider"></div>
+        <a href="menu.html" class="mobile-cta">Launch Demo</a>
+    </div>
+
+    <div class="page-frame">
+        <div class="page-meta">
+            <span><span class="dot"></span>Pose / AI &nbsp;·&nbsp; v1.0</span>
+            <span>Browser-Native Pose Classification</span>
+        </div>
+
+        <section class="hero animate-in">
+            <div>
+                <div class="hero-eyebrow">Real-time / In-Browser / 7 Classes</div>
+                <h1>See your<br>posture<br><em>in real time.</em></h1>
+                <p class="hero-lede">A browser-based AI tool that tracks your body posture in real time. No installation, no uploads — every frame stays on your device.</p>
+                <div class="hero-actions">
+                    <a href="menu.html" class="btn-primary">Launch Demo
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="about.html" class="btn-ghost">How it works</a>
+                </div>
+            </div>
+            <div class="hero-demo">
+                <div class="demo-grid"></div>
+                <div class="demo-corner tl">CAM 01<br>1:1</div>
+                <div class="demo-corner tr">REC<br>00:00:14</div>
+                <div class="demo-corner bl">CONF 0.92</div>
+                <div class="demo-corner br">17 KEYPOINTS<br>TRACKED</div>
+                <svg class="skeleton" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+                    <g id="hero-skeleton" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.95">
+                        <!-- head -->
+                        <circle id="hd" cx="100" cy="58" r="8"/>
+                        <!-- shoulders -->
+                        <line id="sh" x1="80" y1="80" x2="120" y2="80"/>
+                        <!-- spine -->
+                        <line id="sp" x1="100" y1="80" x2="100" y2="125"/>
+                        <!-- arms -->
+                        <line id="larm1" x1="80" y1="80" x2="68" y2="105"/>
+                        <line id="larm2" x1="68" y1="105" x2="60" y2="130"/>
+                        <line id="rarm1" x1="120" y1="80" x2="132" y2="105"/>
+                        <line id="rarm2" x1="132" y1="105" x2="140" y2="130"/>
+                        <!-- hips -->
+                        <line id="hp" x1="86" y1="125" x2="114" y2="125"/>
+                        <!-- legs -->
+                        <line id="lleg1" x1="86" y1="125" x2="80" y2="155"/>
+                        <line id="lleg2" x1="80" y1="155" x2="78" y2="180"/>
+                        <line id="rleg1" x1="114" y1="125" x2="120" y2="155"/>
+                        <line id="rleg2" x1="120" y1="155" x2="122" y2="180"/>
+                        <!-- joints -->
+                        <g fill="#fff" stroke="none">
+                            <circle cx="80" cy="80" r="2.4"/><circle cx="120" cy="80" r="2.4"/>
+                            <circle cx="68" cy="105" r="2"/><circle cx="132" cy="105" r="2"/>
+                            <circle cx="60" cy="130" r="2"/><circle cx="140" cy="130" r="2"/>
+                            <circle cx="86" cy="125" r="2.2"/><circle cx="114" cy="125" r="2.2"/>
+                            <circle cx="80" cy="155" r="2"/><circle cx="120" cy="155" r="2"/>
+                            <circle cx="78" cy="180" r="1.8"/><circle cx="122" cy="180" r="1.8"/>
+                        </g>
+                    </g>
+                </svg>
+                <div class="demo-label"><span class="live-dot"></span><span id="hero-pose-label">Standing Posture</span></div>
+            </div>
+        </section>
+
+        <section class="section animate-in" style="animation-delay:0.1s;">
+            <div class="section-head">
+                <div class="section-num">SECTION 01 / <strong>WHAT</strong></div>
+                <h2 class="section-title">A trained model, running entirely <em>on your device.</em></h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-glyph">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg>
+                    </div>
+                    <div class="feature-title">Real-time pose detection</div>
+                    <div class="feature-desc">Tracks 17 body landmarks every frame using your webcam, drawn directly onto the live canvas.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-glyph">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="feature-title">100% private</div>
+                    <div class="feature-desc">Inference runs locally in TensorFlow.js. No frames, no keypoints, no metadata leave the device.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-glyph">
+                        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <div class="feature-title">Instant feedback</div>
+                    <div class="feature-desc">Confidence updates frame-by-frame. The 15-second test returns a full accuracy report under a second.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-glyph">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                    <div class="feature-title">15-second test mode</div>
+                    <div class="feature-desc">Hold a pose for 15 seconds and receive a confidence percentage across 7 trained classes plus a movement log.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section animate-in" style="animation-delay:0.15s;">
+            <div class="section-head">
+                <div class="section-num">SECTION 02 / <strong>POSES</strong></div>
+                <h2 class="section-title">The model recognizes <em>seven classes.</em></h2>
+            </div>
+            <div class="pose-classes">
+                <span class="pose-chip"><span class="num">01</span>Desk Posture</span>
+                <span class="pose-chip"><span class="num">02</span>Standing Posture</span>
+                <span class="pose-chip"><span class="num">03</span>Right Hand Raised</span>
+                <span class="pose-chip"><span class="num">04</span>Left Hand Raised</span>
+                <span class="pose-chip"><span class="num">05</span>Left Leg Raised</span>
+                <span class="pose-chip"><span class="num">06</span>Right Leg Raised</span>
+                <span class="pose-chip"><span class="num">07</span>Hands Up</span>
+            </div>
+        </section>
+
+        <section class="section animate-in" style="animation-delay:0.2s;">
+            <div class="section-head">
+                <div class="section-num">SECTION 03 / <strong>HOW</strong></div>
+                <h2 class="section-title">Three steps. <em>No setup.</em></h2>
+            </div>
+            <div class="steps-list">
+                <div class="step-item">
+                    <div class="step-number">STEP 01</div>
+                    <div class="step-title">Open the demo</div>
+                    <div class="step-desc">Hit Launch Demo from the navbar to enter the mode-selection screen.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">STEP 02</div>
+                    <div class="step-title">Pick a mode</div>
+                    <div class="step-desc">Live Tracking gives you continuous detection. The 15-second test scores you across the 7 trained classes.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">STEP 03</div>
+                    <div class="step-title">Allow camera & start</div>
+                    <div class="step-desc">Approve camera access, step into frame, and begin. Detection starts on the very first frame.</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <span>© 2026 / Pose AI</span>
+            <span>Powered by Teachable Machine + TensorFlow.js</span>
+        </footer>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('hamburger').classList.toggle('open');
+            document.getElementById('mobile-menu').classList.toggle('open');
+        }
+        document.addEventListener('click', function(e) {
+            const btn = document.getElementById('hamburger');
+            const menu = document.getElementById('mobile-menu');
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                btn.classList.remove('open');
+                menu.classList.remove('open');
+            }
+        });
+
+        // animated hero skeleton — cycles through 4 poses
+        (function(){
+            const POSES = [
+                { label:'Standing Posture', sh:[80,80,120,80], sp:[100,80,100,125], larm1:[80,80,68,105], larm2:[68,105,60,130], rarm1:[120,80,132,105], rarm2:[132,105,140,130], lleg1:[86,125,80,155], lleg2:[80,155,78,180], rleg1:[114,125,120,155], rleg2:[120,155,122,180], hd:[100,58] },
+                { label:'Hands Up', sh:[80,80,120,80], sp:[100,80,100,125], larm1:[80,80,76,55], larm2:[76,55,72,28], rarm1:[120,80,124,55], rarm2:[124,55,128,28], lleg1:[86,125,80,155], lleg2:[80,155,78,180], rleg1:[114,125,120,155], rleg2:[120,155,122,180], hd:[100,58] },
+                { label:'Right Hand Raised', sh:[80,80,120,80], sp:[100,80,100,125], larm1:[80,80,68,105], larm2:[68,105,60,130], rarm1:[120,80,128,52], rarm2:[128,52,134,28], lleg1:[86,125,80,155], lleg2:[80,155,78,180], rleg1:[114,125,120,155], rleg2:[120,155,122,180], hd:[100,58] },
+                { label:'Left Leg Raised', sh:[80,80,120,80], sp:[100,80,100,125], larm1:[80,80,68,105], larm2:[68,105,60,130], rarm1:[120,80,132,105], rarm2:[132,105,140,130], lleg1:[86,125,72,140], lleg2:[72,140,52,128], rleg1:[114,125,120,155], rleg2:[120,155,122,180], hd:[100,58] }
+            ];
+            const ids=['sh','sp','larm1','larm2','rarm1','rarm2','lleg1','lleg2','rleg1','rleg2'];
+            let i=0;
+            function step(){
+                const p=POSES[i];
+                ids.forEach(id=>{
+                    const el=document.getElementById(id);
+                    if(!el) return;
+                    const v=p[id];
+                    el.setAttribute('x1',v[0]); el.setAttribute('y1',v[1]); el.setAttribute('x2',v[2]); el.setAttribute('y2',v[3]);
+                });
+                const hd=document.getElementById('hd');
+                if(hd){ hd.setAttribute('cx',p.hd[0]); hd.setAttribute('cy',p.hd[1]); }
+                document.getElementById('hero-pose-label').textContent=p.label;
+                i=(i+1)%POSES.length;
+            }
+            // smooth css transitions on lines
+            document.querySelectorAll('#hero-skeleton line, #hero-skeleton circle').forEach(el=>{
+                el.style.transition='all 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+            });
+            step();
+            setInterval(step, 2400);
+        })();
+    </script>
+</body>
+</html>

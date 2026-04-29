@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose AI / About</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function(){ try { var t = localStorage.getItem('pose-ai-theme') || 'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand-box">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg>
+                <span class="brand-text">Pose<span class="slash">/</span>AI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item">Home</a></li>
+                <li><a href="about.html" class="nav-item active">About</a></li>
+            </ul>
+            <a href="menu.html" class="nav-cta-btn"><span class="dot-live"></span><span>Launch Demo</span></a>
+            <button class="hamburger-btn" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="home.html">Home</a>
+        <a href="about.html" class="active">About</a>
+        <div class="mobile-divider"></div>
+        <a href="menu.html" class="mobile-cta">Launch Demo</a>
+    </div>
+
+    <div class="page-frame">
+        <div class="page-meta">
+            <span><span class="dot"></span>About / Pose AI</span>
+            <span>Specs &amp; Contact</span>
+        </div>
+
+        <section class="section animate-in" style="border-bottom:none; padding-top:24px; padding-bottom: 24px;">
+            <div class="section-head">
+                <div class="section-num">DOC 01 / <strong>ABOUT</strong></div>
+                <h2 class="section-title">Built for accuracy. <em>Engineered for privacy.</em></h2>
+            </div>
+        </section>
+
+        <div class="about-grid">
+            <div class="about-card animate-in">
+                <h2>What it is</h2>
+                <p>A web application that uses machine learning to analyze and classify human body posture in real time, entirely within your browser — <strong>no uploads, no servers, no installation.</strong></p>
+                <p>Pose detection runs on TensorFlow.js. A custom-trained classifier maps the resulting keypoints to one of seven posture classes, frame by frame.</p>
+                <div class="kvs">
+                    <div class="kv"><span class="k">Runtime</span><span class="v">Browser / WebGL</span></div>
+                    <div class="kv"><span class="k">Backbone</span><span class="v">PoseNet (tfjs)</span></div>
+                    <div class="kv"><span class="k">Classifier</span><span class="v">Teachable Machine</span></div>
+                    <div class="kv"><span class="k">Latency</span><span class="v">≤ 50ms / frame</span></div>
+                </div>
+            </div>
+            <div class="about-card animate-in" style="animation-delay:0.1s;">
+                <h2>How it works</h2>
+                <p>The app is powered by <strong>Google's Teachable Machine</strong>, running a custom-trained pose classification model directly in your browser. It detects body keypoints from the camera feed and classifies the result across 7 trained classes.</p>
+                <p>All processing happens locally. Your camera stream never leaves the device — there is no backend to leak it to.</p>
+                <div class="kvs">
+                    <div class="kv"><span class="k">Classes</span><span class="v">7 postures</span></div>
+                    <div class="kv"><span class="k">Test length</span><span class="v">15 seconds</span></div>
+                    <div class="kv"><span class="k">Confirm window</span><span class="v">12 frames</span></div>
+                    <div class="kv"><span class="k">Min confidence</span><span class="v">0.45</span></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="contact-section animate-in" style="animation-delay:0.2s;">
+            <span class="contact-label">// Let's talk</span>
+            <a href="mailto:nikos.kps@outlook.com" class="contact-email">nikos.kps@outlook.com</a>
+            <div class="socials-container">
+                <a href="https://www.linkedin.com/in/nikolaos-kapsalas-1b1b91358" target="_blank" class="social-link" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </a>
+                <a href="https://github.com/NikosKps" target="_blank" class="social-link" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <span>© 2026 / Pose AI</span>
+            <span>v1.0 / Athens</span>
+        </footer>
+    </div>
+
+    <script>
+        function toggleMenu(){ document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobile-menu').classList.toggle('open'); }
+        document.addEventListener('click', function(e){
+            const btn=document.getElementById('hamburger'); const menu=document.getElementById('mobile-menu');
+            if(!btn.contains(e.target)&&!menu.contains(e.target)){ btn.classList.remove('open'); menu.classList.remove('open'); }
+        });
+    </script>
+</body>
+</html>

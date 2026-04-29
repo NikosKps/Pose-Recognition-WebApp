@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose AI / Menu</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2'><circle cx='12' cy='5' r='2'/><path d='M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function(){ try { var t = localStorage.getItem('pose-ai-theme') || 'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-brand-box">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v7M9 21l3-7 3 7M7 11l-2 3M17 11l2 3"/></svg>
+                <span class="brand-text">Pose<span class="slash">/</span>AI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-item">Home</a></li>
+                <li><a href="about.html" class="nav-item">About</a></li>
+            </ul>
+            <span class="nav-cta-current"><span class="dot-live"></span><span>Demo</span></span>
+            <button class="hamburger-btn" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="home.html">Home</a>
+        <a href="about.html">About</a>
+        <div class="mobile-divider"></div>
+        <a href="menu.html" class="mobile-cta active">Demo</a>
+    </div>
+
+    <div class="page-frame">
+        <div class="page-meta">
+            <span><span class="dot"></span>Demo / Mode Select</span>
+            <span>2 modes available</span>
+        </div>
+
+        <div class="menu-wrap animate-in">
+            <div class="menu-head">
+                <h1>Choose<br><em>your mode.</em></h1>
+                <p>Select a tracking experience. Switch between modes any time — your camera permission persists.</p>
+            </div>
+
+            <div class="menu-grid">
+                <a href="live.html" class="menu-card animate-in" style="animation-delay:0.1s;">
+                    <div class="menu-card-meta"><span>MODE 01</span><span class="pill">Continuous</span></div>
+                    <div class="menu-card-visual">
+                        <div class="v-grid"></div>
+                        <div class="v-corner" style="top:12px;left:12px;">CAM 01</div>
+                        <div class="v-corner" style="top:12px;right:12px;">REC</div>
+                        <div class="v-corner" style="bottom:12px;left:12px;">17 KEYPOINTS</div>
+                        <svg class="skeleton-mini" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+                            <g stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.9">
+                                <circle cx="100" cy="60" r="8"/>
+                                <line x1="80" y1="82" x2="120" y2="82"/>
+                                <line x1="100" y1="82" x2="100" y2="125"/>
+                                <line x1="80" y1="82" x2="64" y2="110"/>
+                                <line x1="64" y1="110" x2="56" y2="135"/>
+                                <line x1="120" y1="82" x2="136" y2="110"/>
+                                <line x1="136" y1="110" x2="144" y2="135"/>
+                                <line x1="86" y1="125" x2="80" y2="158"/>
+                                <line x1="80" y1="158" x2="76" y2="184"/>
+                                <line x1="114" y1="125" x2="120" y2="158"/>
+                                <line x1="120" y1="158" x2="124" y2="184"/>
+                                <line x1="86" y1="125" x2="114" y2="125"/>
+                            </g>
+                            <g fill="#fff">
+                                <circle cx="80" cy="82" r="2.4"/><circle cx="120" cy="82" r="2.4"/>
+                                <circle cx="64" cy="110" r="2"/><circle cx="136" cy="110" r="2"/>
+                                <circle cx="56" cy="135" r="2"/><circle cx="144" cy="135" r="2"/>
+                                <circle cx="86" cy="125" r="2"/><circle cx="114" cy="125" r="2"/>
+                                <circle cx="80" cy="158" r="2"/><circle cx="120" cy="158" r="2"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Live Tracking</h3>
+                        <p>Continuous real-time pose recognition. Confidence updates every frame.</p>
+                    </div>
+                    <div class="menu-card-foot">
+                        <span>OPEN ↗</span>
+                        <span class="arrow">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <a href="score.html" class="menu-card animate-in" style="animation-delay:0.2s;">
+                    <div class="menu-card-meta"><span>MODE 02</span><span class="pill">15 seconds</span></div>
+                    <div class="menu-card-visual">
+                        <div class="v-grid"></div>
+                        <div class="v-corner" style="top:12px;left:12px;">TEST</div>
+                        <div class="v-corner" style="top:12px;right:12px;">15 SEC</div>
+                        <div class="v-corner" style="bottom:12px;right:12px;">SCORE OUT</div>
+                        <div class="timer-ring">15<span style="font-size:24px;color:rgba(255,255,255,0.5);margin-left:4px;">s</span></div>
+                    </div>
+                    <div>
+                        <h3>Posture Test</h3>
+                        <p>Hold a pose for 15 seconds. Receive a confidence score plus full movement log.</p>
+                    </div>
+                    <div class="menu-card-foot">
+                        <span>OPEN ↗</span>
+                        <span class="arrow">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <footer class="page-footer">
+            <span>© 2026 / Pose AI</span>
+            <span>Camera access required</span>
+        </footer>
+    </div>
+
+    <script>
+        function toggleMenu(){ document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobile-menu').classList.toggle('open'); }
+        document.addEventListener('click', function(e){
+            const btn=document.getElementById('hamburger'); const menu=document.getElementById('mobile-menu');
+            if(!btn.contains(e.target)&&!menu.contains(e.target)){ btn.classList.remove('open'); menu.classList.remove('open'); }
+        });
+    </script>
+</body>
+</html>
