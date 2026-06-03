@@ -97,5 +97,4 @@ To stop the server:
 ---
 
 *Pose AI — Real-time Posture Detection*  
-*Dissertation Project — University of East London (UEL), May 2026*  
-*Author: Nikolaos Kapsalas | Supervisor: Antonis Archontis*
+*Author: Nikolaos Kapsalas*
